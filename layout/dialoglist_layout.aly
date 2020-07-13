@@ -1,0 +1,64 @@
+{
+  FrameLayout,
+  background="#00000000",
+  layout_width="fill",
+  layout_height="100%h",
+  id="listPopIn",
+  onClick=function()
+    WebViewlistPopDismiss()
+  end,
+ 
+    
+  {
+    LinearLayout,--线性布局
+    orientation="horizontal",--水平方向
+    layout_width="fill",--布局宽度
+    layout_gravity="bottom|center",--重力居底｜置中
+    gravity="bottom|center",--重力居底｜置中
+    layout_height="56dp",--布局高度   
+    background=backgroundc,
+
+    {
+      TextView,--文本框控件
+      layout_gravity="bottom|center",--重力居底｜置中
+      gravity="bottom|center",--重力居底｜置中
+      text="添加窗口",--文本内容
+      layout_width="fill",--布局宽度
+      Typeface=字体("product");
+      layout_height="fill",--布局宽度
+      onClick=function()
+        webview()
+      end,
+      background=backgroundc,
+      BackgroundDrawable=转波纹(0x3fffffff),
+      gravity="center",--重力居中
+      textSize="15sp",--文本大小
+      layout_gravity="center",--重力居中
+      --textColor="#ffffff",--文本颜色
+    },
+  },--线性布局 结束
+
+  {
+    LinearLayout,
+    background="#50000000",
+    layout_width="fill",
+    layout_height="fill",
+    Gravity="center|bottom",
+    layout_marginBottom="56dp",
+    id="listPopIn2",
+    onClick=function()
+      WebViewlistPopDismiss()
+    end,
+  
+    {
+      ListView,--列表视图控件
+      layout_width="fill",--布局宽度
+      layout_height="wrap",--布局高度
+      dividerHeight="0",--分割线高度
+      id="list",
+      layout_gravity="bottom|center",--重力居底｜置中
+      background="#00FFFFFF",
+      verticalScrollBarEnabled=false,--隐藏滑条
+    },
+  },
+}
