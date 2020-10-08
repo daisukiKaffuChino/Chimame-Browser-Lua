@@ -1,18 +1,28 @@
 appname="Chimame Browser"
-appver="0.200"
-appcode="2000"
+appver="0.210"
+appcode="2100"
 appsdk="21"
 path_pattern=""
-packagename="com.ZYL.chimamebrow"
+packagename="com.ZYL.chimamebrowser"
 theme="Theme_Material_Light"
 app_key=""
 app_channel=""
-developer="DXBFQLZN"
+developer="ZYL"
 description=""
 debugmode=true
 user_permission={
   "ACCESS_COARSE_LOCATION",
   "ACCESS_FINE_LOCATION",
+  "ACCESS_NETWORK_STATE",
+  "ACCESS_WIFI_STATE",
+  "GET_PACKAGE_SIZE",
+  "INSTALL_SHORTCUT",
   "INTERNET",
+  "READ_EXTERNAL_STORAGE",
+  "REQUEST_INSTALL_PACKAGES",
+  "SET_WALLPAPER",
+  "SYSTEM_ALERT_WINDOW",
+  "VIBRATE",
+  "WAKE_LOCK",
   "WRITE_EXTERNAL_STORAGE"
 }
