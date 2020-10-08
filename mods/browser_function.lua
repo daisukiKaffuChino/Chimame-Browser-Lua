@@ -11,10 +11,11 @@ import "android.view.WindowManager"
 import "android.view.inputmethod.InputMethodManager"
 import "android.view.KeyEvent"
 import "android.webkit.WebView"
+import "android.text.format.Formatter"
 import "com.lua.*"
 import "mods.control_function"
-
-
+import "mods.history"
+import "mods.ViewBitmapCapture"
 
 
 
@@ -56,6 +57,13 @@ function mSettings(view)
   view.getSettings().setGeolocationEnabled(true);--启用地理定位
   view.getSettings().setUseWideViewPort(true)--调整图片自适应
   view.getSettings().setJavaScriptCanOpenWindowsAutomatically(true); --//支持通过JS打开新窗口
+  
+  if activity.getSharedData("ua")==nil then
+  view.getSettings().setUserAgentString(nil);
+  else
+  view.getSettings().setUserAgentString(activity.getSharedData("ua"));
+  end
+  
   view.removeView(view.getChildAt(0))--删除自带进度条
 end
 
@@ -130,7 +138,7 @@ end
 
 function changeurltext(web,text)
   if web==visibilityweb[1] then--是否为当前显示的控件
-   editext.setText(text)
+    editext.setText(text)
   end
 end
 
@@ -163,7 +171,11 @@ function getmWebChromeClient()
     onReceivedTitle=function(view,text)
       if #view.getTitle()>1 then
         weblist2[weblist3[view.id]].title=view.getTitle()
-        changeurltext(view,view.getTitle())
+        if view.getTitle()=="网页无法打开" then
+          changeurltext(view,"啊哦,网页跑丢了_(:з」∠)_")
+         else
+          changeurltext(view,view.getTitle())
+        end
        else
         changeurltext(view,view.getUrl())
       end
@@ -206,16 +218,50 @@ function getmWebViewClient()
 
     end,
     onLoadResource=function(view,url)
+      添加历史记录(5000)
       changepar(view,p)
     end,
     onPageFinished=function(view,url)--这个回调非常坑
+      webView.setDownloadListener{onDownloadStart=function(url,userAgent,contentDisposition,mimetype,contentLength)
+          
+          import "android.webkit.URLUtil"
+          local 文件名=URLUtil.guessFileName(url, contentDisposition, mimeType);
+          local 下载链接=url
+          local 文件类型=mimetype
+          local 文件大小=Formatter.formatFileSize(this, contentLength)
+          三按钮对话框("下载确认",
+          "文件名："..文件名.."\n文件类型："..文件类型.."\n文件大小："..文件大小.."\n下载链接："..下载链接,
+          "下载",
+          "复制链接",
+          "取消",
+          function()关闭对话框(an)
+            if activity.getSharedData("Setting_ADM")=="true" then
+              function adm(dlurl)
+                this.startActivity(Intent().setAction("android.intent.action.SEND").setType("text/*").putExtra("android.intent.extra.TEXT", dlurl).setClassName("com.dv.adm.pay", "com.dv.adm.pay.AEditor"));
+              end
+              adm(下载链接)
+             else
+              downloadManager=activity.getSystemService(Context.DOWNLOAD_SERVICE);
+              url=Uri.parse(下载链接);
+              request=DownloadManager.Request(url);
+              request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE|DownloadManager.Request.NETWORK_WIFI);
+              request.setDestinationInExternalPublicDir("Download",文件名);
+              request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+              downloadManager.enqueue(request);
+              提示("已开始下载，请前往通知栏查看")
+            end
+          end,
+          function()关闭对话框(an)复制文本(下载链接)提示("复制完毕")end,
+          function()关闭对话框(an)end)
+        end}
+      getinfo()
       for i=1,#cont do
-    if view.url:find(cont[i].url.text) or cont[i].url.text=="*" then
-      加载脚本(view,cont[i].js.text)
-    end
-    if webView.url:find(cont[i].url.text) and cont[i].element.text~="" then
-      屏蔽元素(webView,split(cont[i].element.text,","))
-    end
+        if view.url:find(cont[i].url.text) or cont[i].url.text=="*" then
+          加载脚本(view,cont[i].js.text)
+        end
+        if webView.url:find(cont[i].url.text) and cont[i].element.text~="" then
+          屏蔽元素(webView,split(cont[i].element.text,","))
+        end
       end
       if not(visibilityweb[3]) then
         visibilityweb[3]=false
@@ -237,173 +283,179 @@ end
     end
   --]]
 --end
-  
 
-  function removeWebView(i)
-    view=weblist[i]
-    if view then
-      view.stopLoading()
-      view.loadDataWithBaseURL(nil, "", "text/html", "utf-8", nil);
-      view.clearHistory()
-      view.onPause();
-      view.removeAllViews();
-      webviewp.removeView(view)
-      view.destroy()
-      _G[weblist[i]]=nil--销毁WebView(G表里面删除)
-      weblist[i]=nil--weblist里面删除
-      adp.remove(i-1)--移除list里的目标对象
-    end
+--[
+
+
+--]]
+
+
+
+function removeWebView(i)
+  view=weblist[i]
+  if view then
+    view.stopLoading()
+    view.loadDataWithBaseURL(nil, "", "text/html", "utf-8", nil);
+    view.clearHistory()
+    view.onPause();
+    view.removeAllViews();
+    webviewp.removeView(view)
+    view.destroy()
+    _G[weblist[i]]=nil--销毁WebView(G表里面删除)
+    weblist[i]=nil--weblist里面删除
+    adp.remove(i-1)--移除list里的目标对象
   end
+end
 
-  function addTab(view)
-    local addview=loadlayout({
-      View,
-      layout_width="1",
-      layout_height="1",
-      Visibility=8,
-    })
-    weblist4[view.id]=addview
-    view.addView(addview)
+function addTab(view)
+  local addview=loadlayout({
+    View,
+    layout_width="1",
+    layout_height="1",
+    Visibility=8,
+  })
+  weblist4[view.id]=addview
+  view.addView(addview)
+end
+
+function addOnLongClick(view)
+  view.onTouch=function(v,e)
+    weblist4[v.id].x=e.x
+    weblist4[v.id].y=e.y+v.getScrollY()
   end
+  view.onLongClick=function(v)
+    hitTestResult = v.getHitTestResult()
 
-  function addOnLongClick(view)
-    view.onTouch=function(v,e)
-      weblist4[v.id].x=e.x
-      weblist4[v.id].y=e.y+v.getScrollY()
-    end
-    view.onLongClick=function(v)
-      hitTestResult = v.getHitTestResult()
+    if (hitTestResult.getType() == WebView.HitTestResult.IMAGE_TYPE or hitTestResult.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE)then
 
-      if (hitTestResult.getType() == WebView.HitTestResult.IMAGE_TYPE or hitTestResult.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE)then
-
-        local pop=PopupMenu(activity,weblist4[v.id])
-        menu=pop.Menu
-        menu.add("保存图片").onMenuItemClick=function(a)
-          picUrl = hitTestResult.getExtra()
-          Http.download(picUrl,"/sdcard/download/pictures/"..os.date("%Y-%m-%d-%H-%M-%S")..".png",function(a)
-          end)
-          提示("图片已保存于/sdcard/download/pictures/")
-        end
-        menu.add("保存动态图片").onMenuItemClick=function(a)
-          picUrl = hitTestResult.getExtra()
-          Http.download(picUrl,"/sdcard/download/pictures/"..os.date("%Y-%m-%d-%H-%M-%S")..".gif",function(a)
-          end)
-          提示("图片已保存于/sdcard/download/pictures/")
-        end
-        menu.add("搜狗识图").onMenuItemClick=function(a)
-          picUrl = hitTestResult.getExtra()
-          v.loadUrl("https://pic.sogou.com/pic/ris_searchList.jsp?statref=home&v=5&ul=1&keyword="..picUrl)
-          提示("正在识图....")
-        end
-
-        pop.show()--显示
-       elseif hitTestResult.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE or hitTestResult.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE then
-
-        local pop=PopupMenu(activity,weblist4[v.id])
-        menu=pop.Menu
-        menu.add("在新窗口打开").onMenuItemClick=function(a)
-          webview(hitTestResult.getExtra())
-        end
-        menu.add("后台打开").onMenuItemClick=function(a)
-          webview(hitTestResult.getExtra(),true)
-        end
-        pop.show()--显示
-
+      local pop=PopupMenu(activity,weblist4[v.id])
+      menu=pop.Menu
+      menu.add("保存图片").onMenuItemClick=function(a)
+        picUrl = hitTestResult.getExtra()
+        Http.download(picUrl,"/sdcard/download/pictures/"..os.date("%Y-%m-%d-%H-%M-%S")..".png",function(a)
+        end)
+        提示("图片已保存于/sdcard/download/pictures/")
       end
-    end
-
-  end
-
-  function string2tab(t)
-    return load(table.concat({"return ",t},""))()
-  end
-
-  function 写入文件(路径,内容)
-    import "java.io.File"
-    f=File(tostring(File(tostring(路径)).getParentFile())).mkdirs()
-    io.open(tostring(路径),"w"):write(tostring(内容)):close()
-  end
-
-  function 读取文件(路径)
-    return io.open(路径):read("*a")
-  end
-  function sethistory(add,add2,is)
-
-    local 数据源=Environment.getExternalStorageDirectory().toString().."/Android/data/"..activity.getPackageName().."/cache/history.table"
-    local cache=gethistory()--获取历史记录
-
-    table.insert(cache,{add,add2})
-    if is then--清空历史数据
-      写入文件(数据源,dump({}))
-     else
-      写入文件(数据源,dump(cache))
-    end
-  end
-  function importhistory(t,q)
-    local 数据源=Environment.getExternalStorageDirectory().toString().."/Android/data/"..activity.getPackageName().."/cache/history.table"
-    if q then--q为是否合并导入，不q就完全覆盖
-     else
-      写入文件(数据源,dump(string2tab(读取文件(t))))
-    end
-  end
-  function bakhistory(t)
-    写入文件(t.."/history.table",dump(gethistory()))
-  end
-  function gethistory()
-    import "java.io.File"
-    local 数据源=Environment.getExternalStorageDirectory().toString().."/Android/data/"..activity.getPackageName().."/cache/history.table"
-    if File(数据源).exists() then--存在就返回table
-      local cache=读取文件(数据源)
-      local re=string2tab(cache)
-      if type(re)=="table" then--判断是否有历史记录
-        return re
-       else
-        return {}
+      menu.add("保存动态图片").onMenuItemClick=function(a)
+        picUrl = hitTestResult.getExtra()
+        Http.download(picUrl,"/sdcard/download/pictures/"..os.date("%Y-%m-%d-%H-%M-%S")..".gif",function(a)
+        end)
+        提示("图片已保存于/sdcard/download/pictures/")
       end
+      menu.add("搜狗识图").onMenuItemClick=function(a)
+        picUrl = hitTestResult.getExtra()
+        v.loadUrl("https://pic.sogou.com/pic/ris_searchList.jsp?statref=home&v=5&ul=1&keyword="..picUrl)
+        提示("正在识图....")
+      end
+
+      pop.show()--显示
+     elseif hitTestResult.getType() == WebView.HitTestResult.SRC_ANCHOR_TYPE or hitTestResult.getType() == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE then
+
+      local pop=PopupMenu(activity,weblist4[v.id])
+      menu=pop.Menu
+      menu.add("在新窗口打开").onMenuItemClick=function(a)
+        webview(hitTestResult.getExtra())
+      end
+      menu.add("后台打开").onMenuItemClick=function(a)
+        webview(hitTestResult.getExtra(),true)
+      end
+      pop.show()--显示
+
+    end
+  end
+
+end
+
+function string2tab(t)
+  return load(table.concat({"return ",t},""))()
+end
+
+function 写入文件(路径,内容)
+  import "java.io.File"
+  f=File(tostring(File(tostring(路径)).getParentFile())).mkdirs()
+  io.open(tostring(路径),"w"):write(tostring(内容)):close()
+end
+
+function 读取文件(路径)
+  return io.open(路径):read("*a")
+end
+function sethistory(add,add2,is)
+
+  local 数据源=Environment.getExternalStorageDirectory().toString().."/Android/data/"..activity.getPackageName().."/cache/history.table"
+  local cache=gethistory()--获取历史记录
+
+  table.insert(cache,{add,add2})
+  if is then--清空历史数据
+    写入文件(数据源,dump({}))
+   else
+    写入文件(数据源,dump(cache))
+  end
+end
+function importhistory(t,q)
+  local 数据源=Environment.getExternalStorageDirectory().toString().."/Android/data/"..activity.getPackageName().."/cache/history.table"
+  if q then--q为是否合并导入，不q就完全覆盖
+   else
+    写入文件(数据源,dump(string2tab(读取文件(t))))
+  end
+end
+function bakhistory(t)
+  写入文件(t.."/history.table",dump(gethistory()))
+end
+function gethistory()
+  import "java.io.File"
+  local 数据源=Environment.getExternalStorageDirectory().toString().."/Android/data/"..activity.getPackageName().."/cache/history.table"
+  if File(数据源).exists() then--存在就返回table
+    local cache=读取文件(数据源)
+    local re=string2tab(cache)
+    if type(re)=="table" then--判断是否有历史记录
+      return re
      else
-      写入文件(数据源,dump({}))--写入空table
       return {}
     end
+   else
+    写入文件(数据源,dump({}))--写入空table
+    return {}
   end
-  function CircleButton(view,InsideColor,radiu)
-    import "android.graphics.drawable.GradientDrawable"
-    drawable = GradientDrawable()
-    drawable.setShape(GradientDrawable.RECTANGLE)
-    drawable.setColor(InsideColor)
-    drawable.setCornerRadii({radiu,radiu,radiu,radiu,radiu,radiu,radiu,radiu});
-    view.setBackgroundDrawable(drawable)
-  end
-  uploadMessageAboveL=0
-  onActivityResult=function(req,res,intent)
-    if (res == Activity.RESULT_CANCELED) then
-      if(uploadMessageAboveL~=nil )then
+end
+function CircleButton(view,InsideColor,radiu)
+  import "android.graphics.drawable.GradientDrawable"
+  drawable = GradientDrawable()
+  drawable.setShape(GradientDrawable.RECTANGLE)
+  drawable.setColor(InsideColor)
+  drawable.setCornerRadii({radiu,radiu,radiu,radiu,radiu,radiu,radiu,radiu});
+  view.setBackgroundDrawable(drawable)
+end
+uploadMessageAboveL=0
+onActivityResult=function(req,res,intent)
+  if (res == Activity.RESULT_CANCELED) then
+    if(uploadMessageAboveL~=nil )then
       --  uploadMessageAboveL.onReceiveValue(nil);
-      end
-    end
-    local results
-    if (res == Activity.RESULT_OK)then
-      if(uploadMessageAboveL==nil or type(uploadMessageAboveL)=="number")then
-        return;
-      end
-      if (intent ~= nil) then
-        local dataString = intent.getDataString();
-        local clipData = intent.getClipData();
-        if (clipData ~= nil) then
-          results = Uri[clipData.getItemCount()];
-          for i = 0,clipData.getItemCount()-1 do
-            local item = clipData.getItemAt(i);
-            results[i] = item.getUri();
-          end
-        end
-        if (dataString ~= nil) then
-          results = Uri[1];
-          results[0]=Uri.parse(dataString)
-        end
-      end
-    end
-    if(results~=nil)then
-      uploadMessageAboveL.onReceiveValue(results);
-      uploadMessageAboveL = nil;
     end
   end
+  local results
+  if (res == Activity.RESULT_OK)then
+    if(uploadMessageAboveL==nil or type(uploadMessageAboveL)=="number")then
+      return;
+    end
+    if (intent ~= nil) then
+      local dataString = intent.getDataString();
+      local clipData = intent.getClipData();
+      if (clipData ~= nil) then
+        results = Uri[clipData.getItemCount()];
+        for i = 0,clipData.getItemCount()-1 do
+          local item = clipData.getItemAt(i);
+          results[i] = item.getUri();
+        end
+      end
+      if (dataString ~= nil) then
+        results = Uri[1];
+        results[0]=Uri.parse(dataString)
+      end
+    end
+  end
+  if(results~=nil)then
+    uploadMessageAboveL.onReceiveValue(results);
+    uploadMessageAboveL = nil;
+  end
+end
 

@@ -19,6 +19,10 @@ fav_textSize="16sp"
 fav_btnColor=转0x(secondaryc)
 
 
+function 加载网页(a)
+webView.loadUrl(a) 
+end
+
 --序列化
 function slz(obj)
   local lua = ""
@@ -210,7 +214,7 @@ function showFav(favIndexs)
     listIndexs={}
   end
   local nowList=selectList(listIndexs)
-  fav_lv=ListView(activity).setFastScrollEnabled(true)
+  fav_lv=ListView(activity).setDividerHeight(0)
   space1=TextView(activity)
   --fav_title=TextView(activity).setText("收藏夹").setTextSize(20)
   fav_path=TextView(activity).setGravity(1)
@@ -255,8 +259,8 @@ function showFav(favIndexs)
     orientation="horizontal",
     paddingLeft="16dp",
     paddingRight="16dp",
-    paddingTop="6dp",
-    paddingBottom="6dp",
+    paddingTop="4dp",
+    paddingBottom="4dp",
     {
       ImageView,
       id="fav_img",
@@ -274,6 +278,7 @@ function showFav(favIndexs)
       textSize=fav_textSize,
       layout_marginLeft="16dp",
       textColor=textc;
+      Typeface=字体("product");
       layout_width="match_parent",
       layout_height="match_parent",
     },

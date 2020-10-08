@@ -70,3 +70,13 @@ import "android.Manifest"
 
 import "android.animation.Animator"
 import "android.animation.ValueAnimator"
+
+
+
+import "android.support.v4.app.*"
+import "android.support.v4.view.*"
+import "android.support.v4.widget.*"
+import "android.support.v7.app.*"
+import "android.support.v7.appcompat.*"
+import "android.support.v7.view.*"
+import "android.support.v7.widget.*"

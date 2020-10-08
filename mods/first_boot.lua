@@ -1,6 +1,6 @@
 require "import"
 --import "mods.muk"
-import "mods.zyl"
+import "mods.Chimame_Core"
 --this.setSharedData("Theme","Night")
 
 
@@ -41,7 +41,7 @@ layout={
   };
   {
     TextView;
-    text="0.200 PreView Virson";
+    text="0.200 PreView Edition";
     textColor=primaryc;
     textSize="18sp";
     id="_subtitle";
