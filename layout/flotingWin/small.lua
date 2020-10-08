@@ -1,0 +1,22 @@
+minlay={
+  LinearLayout,
+  layout_width="58dp",
+  layout_height="58dp",
+  {
+    CardView,
+    layout_width="52dp",
+    layout_height="52dp",
+    --background="#46ccff",
+    layout_margin="3dp",
+    radius=dp2px(28),
+    CardElevation="2dp",
+    id="Win_minWindow",
+      {
+        ImageView;
+        layout_width="fill";
+        layout_height="fill";
+        src="icon.png",
+        
+  },
+  },
+}

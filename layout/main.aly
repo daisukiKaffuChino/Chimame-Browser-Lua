@@ -1,57 +1,72 @@
 {
-  LinearLayout;
-  orientation="vertical";
-  layout_height="fill";
-  layout_width="fill";
+  RelativeLayout;
+  layout_width="-1";
+  background=backgroundc;
+  layout_height="-1";
   {
     LinearLayout;
+    orientation="vertical";
+    layout_height="fill";
     layout_width="fill";
-    layout_height="52dp";
-    orientation="horizontal";
-    gravity="center";
-    id="topbar";
-    Visibility=0,
     {
-      ImageView;
-      layout_width="8dp";
-      layout_height="24dp";
-      onClick=function ()
-     -- 圆形扩散(editext.Parent,this.width,0,this.height,0,350)
-      end
-    };
-    {
-      ImageView;
-      layout_width="38dp";
-      layout_height="38dp";
-      ColorFilter=4278190080;
-      src="res/twotone_https_black_24dp.png";
-      padding="8dp";
-      id="web_safety";
-    };
-    {
-      CardView;
-      layout_width="-1";
-      layout_height="42dp";
-      radius=dp2px(25);
-      CardBackgroundColor="#00000000";
-      elevation="0";
-      layout_weight="1";
-       id="bar_card";
-
-
+      LinearLayout;
+      layout_width="fill";
+      layout_height="52dp";
+      orientation="horizontal";
+      gravity="center";
+      id="topbar";
+      Visibility=0,
       {
-        TextView;
-        layout_width="fill";
-        id="editext";
-        layout_height="fill";
-        textSize="16sp";
-        text="";
-        Typeface=字体("product-Bold");
-        gravity="center|left";
-        textColor=textc;
+        ImageView;
+        layout_width="8dp";
+        layout_height="24dp";
+        onClick=function ()
+          -- 圆形扩散(editext.Parent,this.width,0,this.height,0,350)
+        end
       };
-    };
-    --[[
+      {
+        ImageView;
+        layout_width="38dp";
+        layout_height="38dp";
+        ColorFilter=4278190080;
+        src="res/twotone_https_black_24dp.png";
+        padding="9dp";
+        id="web_safety";
+        onClick=function()web_info()end;
+      };
+      {
+        CardView;
+        layout_width="-1";
+        layout_height="42dp";
+        radius=dp2px(3);
+        CardBackgroundColor="#00000000";
+        elevation="0";
+        layout_weight="1";
+        id="bar_card";
+
+        {
+          LinearLayout;
+          layout_width="fill";
+          layout_height="fill";
+          id="bar_layout";
+          paddingLeft="6dp";
+          {
+            TextView;
+            layout_width="fill";
+            id="editext";
+            layout_height="fill";
+            textSize="16sp";
+            text="";
+            Typeface=字体("product-Bold");
+            gravity="center|left";
+            textColor=textc;
+            ellipsize='marquee',
+            Selected=true,
+            singleLine=true;
+          };
+        };
+      };
+      --[[
     {
       CardView;
       layout_width="-1";
@@ -103,180 +118,373 @@
     };
   
   --]]
-    {
-      ImageView;
-      layout_width="6dp";
-      layout_height="8dp";
+      {
+        ImageView;
+        layout_width="6dp";
+        layout_height="8dp";
+      };
+      {
+        ImageView;
+        layout_width="38dp";
+        id="top_more";
+        layout_height="38dp";
+        padding="9dp";
+        ColorFilter=4278190080;
+        src="res/more.png";
+      };
+      {
+        ImageView;
+        layout_width="6dp";
+        layout_height="8dp";
+      };
     };
     {
-      ImageView;
-      layout_width="38dp";
-      id="top_more";
-      layout_height="38dp";
-      padding="8dp";
-      ColorFilter=4278190080;
-      src="res/more.png";
+      ProgressBar;
+      layout_width="fill";
+      id="pbar";
+      layout_height="2dp";
+      Elevation="2dp";
+      secondaryProgress="0";
+      max="100";
+      style="?android:attr/progressBarStyleHorizontal";
     };
     {
-      ImageView;
-      layout_width="6dp";
-      layout_height="8dp";
+      FrameLayout;
+      layout_width="fill";
+      layout_height="fill";
+      {
+        LinearLayout;
+        layout_width="fill";
+        id="webviewp";
+        layout_height="fill";
+      };
+      {
+        CardView;
+        elevation="0";
+        id="ftb_two";
+        layout_height="50dp";
+        layout_gravity="bottom|center";
+        CardBackgroundColor=primaryc;
+        radius="25dp";
+        layout_marginBottom="20dp";
+        layout_width="50dp";
+        {
+          ImageView;
+          layout_gravity="center";
+          layout_height="24dp";
+          elevation="2dp";
+          src="res/left.png";
+          layout_width="24dp";
+          colorFilter="#ffffffff";
+        };
+      };
+      {
+        CardView;
+        elevation="0";
+        id="ftb_three";
+        layout_height="50dp";
+        layout_gravity="bottom|center";
+        CardBackgroundColor=primaryc;
+        radius="25dp";
+        layout_marginBottom="20dp";
+        layout_width="50dp";
+        {
+          ImageView;
+          layout_gravity="center";
+          layout_height="24dp";
+          elevation="2dp";
+          src="res/right.png";
+          layout_width="24dp";
+          colorFilter="#ffffffff";
+        };
+      };
+      {
+        CardView;
+        elevation="0";
+        id="ftb_four";
+        layout_height="50dp";
+        layout_gravity="bottom|center";
+        radius="25dp";
+        CardBackgroundColor=primaryc;
+        layout_marginBottom="20dp";
+        layout_width="50dp";
+        {
+          ImageView;
+          layout_gravity="center";
+          layout_height="24dp";
+          elevation="2dp";
+          src="res/ic_window.png";
+          layout_width="24dp";
+          colorFilter="#ffffffff";
+        };
+      };
+      {
+        CardView;
+        elevation="0";
+        id="ftb_five";
+        layout_height="50dp";
+        layout_gravity="bottom|center";
+        radius="25dp";
+        layout_marginBottom="20dp";
+        CardBackgroundColor=primaryc;
+        layout_width="50dp";
+        {
+          ImageView;
+          layout_gravity="center";
+          layout_height="24dp";
+          elevation="2dp";
+          src="res/clear_black.png";
+          layout_width="24dp";
+          colorFilter="#ffffffff";
+        };
+      };
+      {
+        CardView;
+        elevation="0";
+        id="ftb_six";
+        layout_height="50dp";
+        layout_gravity="bottom|center";
+        radius="25dp";
+        CardBackgroundColor=primaryc;
+        layout_marginBottom="20dp";
+        layout_width="50dp";
+        {
+          ImageView;
+          layout_gravity="center";
+          layout_height="24dp";
+          elevation="2dp";
+          src="res/refresh_black.png";
+          layout_width="24dp";
+          colorFilter="#ffffffff";
+        };
+      };
+      {
+        CardView;
+        elevation="3dp";
+        id="ftb";
+        layout_height="50dp";
+        layout_gravity="bottom|center";
+        radius=dp2px(25);
+        layout_marginBottom="20dp";
+        CardBackgroundColor=primaryc;
+        layout_width="50dp";
+        {
+          FrameLayout;
+          layout_width="fill";
+          layout_height="fill";
+          {
+            ImageView;
+            layout_width="24dp";
+            id="ftb_img";
+            layout_height="24dp";
+            layout_gravity="center";
+            elevation="2dp";
+            src="res/add_black.png";
+            colorFilter="#ffffffff";
+          };
+          {
+            TextView;
+            layout_width="fill";
+            id="ftb_txt";
+            layout_height="fill";
+            textSize="10";
+            gravity="center";
+            textColor="#ffffffff";
+          };
+        };
+      };
     };
   };
+
+  -------------------
+
+
+
+
   {
-    ProgressBar;
+    LinearLayout;
     layout_width="fill";
-    id="pbar";
-    layout_height="2dp";
-    Elevation="2dp";
-    secondaryProgress="0";
-    max="100";
-    style="?android:attr/progressBarStyleHorizontal";
-  };
-  {
-    FrameLayout;
-    layout_width="fill";
-    layout_height="fill";
+    layout_height="-1";
+    gravity="top|center";
+    id="_topbar";
+    Visibility=8;
     {
       LinearLayout;
       layout_width="fill";
-      id="webviewp";
-      layout_height="fill";
-    };
-    {
-      CardView;
-      elevation="0";
-      id="ftb_two";
-      layout_height="50dp";
-      layout_gravity="bottom|center";
-      CardBackgroundColor=primaryc;
-      radius="25dp";
-      layout_marginBottom="20dp";
-      layout_width="50dp";
+      layout_height="51dp";
+      gravity="left|center";
+      -- paddingLeft="8dp";
+      -- paddingRight="8dp";
+      background=backgroundc;
+      elevation="0dp";
       {
         ImageView;
-        layout_gravity="center";
-        layout_height="24dp";
-        elevation="2dp";
-        src="res/left.png";
-        layout_width="24dp";
-        colorFilter="#ffffffff";
+        ColorFilter=secondaryc;
+        src="res/twotone_clear_black_24dp.png";
+        layout_height="36dp";
+        layout_width="36dp";
+        layout_marginLeft="8dp";
+        padding="6dp";
+        id="edit_close";
+        onClick=function()
+          task(200,function()
+            _topbar.Visibility=8
+            topbar.Visibility=0
+          end)
+        end;
       };
-    };
-    {
-      CardView;
-      elevation="0";
-      id="ftb_three";
-      layout_height="50dp";
-      layout_gravity="bottom|center";
-      CardBackgroundColor=primaryc;
-      radius="25dp";
-      layout_marginBottom="20dp";
-      layout_width="50dp";
       {
-        ImageView;
-        layout_gravity="center";
-        layout_height="24dp";
-        elevation="2dp";
-        src="res/right.png";
-        layout_width="24dp";
-        colorFilter="#ffffffff";
-      };
-    };
-    {
-      CardView;
-      elevation="0";
-      id="ftb_four";
-      layout_height="50dp";
-      layout_gravity="bottom|center";
-      radius="25dp";
-      CardBackgroundColor=primaryc;
-      layout_marginBottom="20dp";
-      layout_width="50dp";
-      {
-        ImageView;
-        layout_gravity="center";
-        layout_height="24dp";
-        elevation="2dp";
-        src="res/ic_window.png";
-        layout_width="24dp";
-        colorFilter="#ffffffff";
-      };
-    };
-    {
-      CardView;
-      elevation="0";
-      id="ftb_five";
-      layout_height="50dp";
-      layout_gravity="bottom|center";
-      radius="25dp";
-      layout_marginBottom="20dp";
-      CardBackgroundColor=primaryc;
-      layout_width="50dp";
-      {
-        ImageView;
-        layout_gravity="center";
-        layout_height="24dp";
-        elevation="2dp";
-        src="res/clear_black.png";
-        layout_width="24dp";
-        colorFilter="#ffffffff";
-      };
-    };
-    {
-      CardView;
-      elevation="0";
-      id="ftb_six";
-      layout_height="50dp";
-      layout_gravity="bottom|center";
-      radius="25dp";
-      CardBackgroundColor=primaryc;
-      layout_marginBottom="20dp";
-      layout_width="50dp";
-      {
-        ImageView;
-        layout_gravity="center";
-        layout_height="24dp";
-        elevation="2dp";
-        src="res/refresh_black.png";
-        layout_width="24dp";
-        colorFilter="#ffffffff";
-      };
-    };
-    {
-      CardView;
-      elevation="3dp";
-      id="ftb";
-      layout_height="50dp";
-      layout_gravity="bottom|center";
-      radius=dp2px(25);
-      layout_marginBottom="20dp";
-      CardBackgroundColor=primaryc;
-      layout_width="50dp";
-      {
-        FrameLayout;
-        layout_width="fill";
-        layout_height="fill";
+        CardView;
+        layout_margin="8dp";
+        layout_height="40dp";
+        layout_width=this.width-270;
+        elevation="0dp";
+        layout_marginBottom="3dp";
+        layout_marginTop="4dp";
+        cardBackgroundColor=cardbackc;
+        radius=dp2px(20);
         {
-          ImageView;
-          layout_width="24dp";
-          id="ftb_img";
-          layout_height="24dp";
-          layout_gravity="center";
-          elevation="2dp";
-          src="res/add_black.png";
-          colorFilter="#ffffffff";
-        };
-        {
-          TextView;
-          layout_width="fill";
-          id="ftb_txt";
+          LinearLayout;
           layout_height="fill";
-          textSize="10";
-          gravity="center";
-          textColor="#ffffffff";
+          gravity="center|left";
+          layout_width="fill";
+          {
+            ImageView;
+            ColorFilter=secondaryc;
+            src="res/twotone_search_black_24dp.png";
+            layout_height="32dp";
+            layout_width="32dp";
+            layout_marginLeft="12dp";
+            padding="4dp";
+          };
+          {
+            EditText;
+            textColor=secondaryc;
+            textSize="15dp";
+            Typeface=字体("product");
+            background="#00000000";
+            text="";
+            hint="在此输入...";
+            singleLine="true";
+            layout_marginLeft="6dp";
+            layout_marginRight="4dp";
+            layout_width="fill";
+            id="edit_search";
+          };
         };
+      };
+      {
+        ImageView;
+        ColorFilter=secondaryc;
+        src="res/right.png";
+        layout_height="36dp";
+        layout_width="36dp";
+        layout_marginRight="5dp";
+        padding="6dp";
+        layout_gravity="center|right";
+        id="web_search";
       };
     };
   };
+
+  {
+    LinearLayout;
+    layout_width="-1";
+    layout_height="-1";
+    gravity="bottom|center";
+    id="_bottombar";
+    Visibility=8;
+    {
+      LinearLayout;
+      layout_width="fill";
+      orientation="horizontal";
+      layout_height="44dp";
+      background=barbackgroundc,
+      {
+        LinearLayout;
+        gravity="center";
+        layout_width="44dp";
+        layout_height="44dp";
+        id="关闭";
+        onClick=function()
+          webView.findAllAsync("")
+          edt.setText(nil)
+          _bottombar.Visibility=8
+          ftb_show()
+        end,
+        {
+          ImageView;
+          layout_height="22dp";
+          src="res/clear_black.png";
+          colorFilter=primaryc,--图片颜色
+          layout_width="22dp";
+        };
+      };
+      {
+        LinearLayout;
+        layout_height="fill";
+        layout_weight="1";
+        orientation="horizontal";
+        {
+          EditText;
+          textColor=textc;
+          layout_gravity="center";
+          textSize="16sp";
+          layout_weight="1";
+          layout_marginRight="10dp";
+          id="edt";
+          hint="页内查找...";
+          singleLine=true;
+          hintTextColor=stextc;
+          BackgroundColor="#00000000";
+        };
+      };
+      {
+        LinearLayout;
+        gravity="center";
+        layout_width="44dp";
+        layout_height="44dp";
+        id="下翻";
+        onClick=function()webView.findNext(true)end,
+        {
+          ImageView;
+          layout_height="22dp";
+          src="res/arrow_downward_black.png";
+          colorFilter=primaryc,
+          layout_width="22dp";
+        };
+      };
+      {
+        LinearLayout;
+        gravity="center";
+        layout_width="44dp";
+        layout_height="44dp";
+        id="上翻";
+        onClick=function()webView.findNext(false)
+        end,
+        {
+          ImageView;
+          layout_height="22dp";
+          src="res/arrow_upward_black.png";
+          colorFilter=primaryc,--图片颜色
+          layout_width="22dp";
+        };
+      };
+    };
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+  -------------------
+
+
 };

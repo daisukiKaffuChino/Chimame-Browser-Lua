@@ -1,0 +1,247 @@
+centerView={
+  RelativeLayout,
+  id="win_centerview",
+  layout_weight="1",
+  layout_height="-1",
+  {
+    LuaWebView;--主体
+    layout_height="-1";
+    layout_width="-1";
+    id="webView";
+  };
+}
+
+winlay={
+  LinearLayout,
+  layout_width="-1",
+  layout_height="-1",
+  {
+    CardView,
+    id="win_mainview",
+    layout_width=activity.getWidth()/1.5,
+    layout_height=activity.getHeight()/2.5,
+    layout_margin="5dp",
+    CardElevation="4dp",
+    radius="6dp",
+    {
+      LinearLayout,
+      layout_width="-1",
+      layout_height="-1",
+      orientation="vertical",
+      {
+        CardView,
+        layout_width="-1",
+        layout_height="30dp",
+        background=backgroundc,
+        radius=0,
+        {
+          LinearLayout,
+          layout_width="-1",
+          layout_height="-1",
+          {
+            LinearLayout,
+            layout_weight="1",
+            layout_height="-1",
+            {
+              TextView,
+              text="",
+              id="win_move",
+              layout_width="-1",
+              layout_height="-1",
+              paddingLeft="5dp",
+              gravity="left|center",
+              textColor=textc,
+              singleLine="true",
+            },
+          },
+
+
+          {
+            RippleLayout,
+            layout_height="-1",
+            layout_width="-2",
+            rippleColor="#50555555",
+            {
+              TextView,
+              gravity="center",
+              layout_width="-1",
+              layout_height="-1",
+              padding="3dp",
+              textColor=textc,
+              text="最小化",
+              onClick="changeWindow",
+            },
+          },
+          {
+            RippleLayout,
+            layout_height="-1",
+            layout_width="30dp",
+            rippleColor="#50555555",
+            {
+              ImageView,
+              layout_width="-1",
+              layout_height="-1",
+              scaleType="centerCrop",
+              padding="3dp",
+              src="res/twotone_clear_black_24dp.png",
+              ColorFilter=textc,
+              onClick="close",
+            },
+          },
+        },
+      },
+      centerView, --这里是悬浮窗中间的布局
+
+
+      {
+        CardView,
+        layout_width="-1",
+        layout_height="-2",
+        background=backgroundc,
+        radius=0,
+        id="tbar",
+        {
+          LinearLayout,
+          layout_width="-1",
+          layout_height="-1",
+          {
+            ImageView,
+            id="win_fav",
+            layout_width="24dp",
+            layout_height="24dp",
+            layout_height="-1",
+            paddingBottom="6dp",
+            paddingLeft="6dp",
+            scaleType="centerInside",
+            src="res/twotone_folder_special_black_24dp.png",
+            ColorFilter=primaryc,
+            onClick=function()showFav()end,
+          },
+
+          {
+            ImageView,
+            layout_width="24dp",
+            layout_height="24dp",
+            layout_height="-1",
+            paddingBottom="6dp",
+            paddingLeft="6dp",
+            scaleType="fitCenter",
+            src="res/twotone_add_black_24dp.png",
+            ColorFilter=primaryc,
+            onClick="funcb",
+            id="funcbs",
+          },
+          {
+            LinearLayout,
+            layout_height="-1",
+            layout_weight="1",
+          },
+
+          {
+            EditText,
+            textSize="11sp",
+            id="urledit";
+            hint="输入网址...";
+            textColor=textc;
+            HintTextColor=stextc;
+            SingleLine=true;
+            layout_marginRight="4dp",
+            layout_width="64dp";
+            layout_height="-2";
+            --  text=source[id].url.text;
+          };
+          {
+            ImageView,
+            layout_width="26dp",
+            layout_height="20dp",
+            layout_height="-1",
+            paddingBottom="6dp",
+            paddingLeft="6dp",
+            scaleType="centerInside",
+            src="res/right.png",
+            paddingRight="6dp",
+            ColorFilter=primaryc,
+            onClick="funcb",
+            id="webgo",
+            onClick=function()go()end,
+          },
+
+
+        },
+      },
+
+
+      {
+        CardView,
+        layout_width="-1",
+        layout_height="-2",
+        background=backgroundc,
+        radius=0,
+        {
+          LinearLayout,
+          layout_width="-1",
+          layout_height="-1",
+          {
+            RippleLayout,
+            layout_height="-1",
+            layout_width="-2",
+            rippleColor=cardbackc,
+            {
+              TextView,
+              gravity="center",
+              layout_width="-1",
+              layout_height="-1",
+              paddingLeft="6dp",
+              padding="3dp",
+              textSize="12sp",
+              textColor=primaryc,
+              text="焦点off",
+              id="win_focus",
+            },
+          },
+          {
+            RippleLayout,
+            layout_height="-1",
+            layout_width="-2",
+            rippleColor=cardbackc,
+            {
+              TextView,
+              gravity="center",
+              layout_width="-1",
+              layout_height="-1",
+              paddingLeft="6dp",
+              padding="3dp",
+              textSize="12sp",
+              textColor=primaryc,
+              text="工具栏显示",
+              id="tvi",
+            },
+          },
+          {
+            LinearLayout,
+            layout_height="-1",
+            layout_weight="1",
+          },
+          {
+            ImageView,
+            id="win_worh",
+            layout_width="30dp",
+            layout_height="-1",
+            paddingBottom="2dp",
+            paddingRight="6dp",
+            scaleType="centerInside",
+            src="res/horw.png",
+            ColorFilter=stextc,
+          },
+        },
+      },
+
+
+
+
+
+
+
+    },
+  },
+}
